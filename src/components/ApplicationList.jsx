@@ -30,7 +30,7 @@ fetchApplications()
         {applications.length > 0 ? ( applications.map(app =>(<ApplicationCard key={app._id} application= {app}/>
 
         ))):(<p className="text-gray-600">No application found.</p>
-            
+
         )}
         </div>
     )
