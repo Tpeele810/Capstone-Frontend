@@ -3,7 +3,8 @@ import api from '../services/api'
 import ApplicationCard from './ApplicationCard'
 import ApplicationForm from './ApplicationForm'
 
-export default ApplicationList(){
+
+export default function ApplicationList() {
     const [applications, setApplications] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -51,7 +52,7 @@ fetchApplications()
     if (loading) return <p className = "p-4">Loading...</p>
     if (error) return <p className = "p-4 text-red-500">{error}</p>
 
-    return(
+    return (
         <div className = "p-4 space-y-6">
         <ApplicationForm onAdd = {(newApp) => setApplications(prev => [...prev, newApp])} />
   
@@ -105,5 +106,5 @@ fetchApplications()
           )}
         </div>
       </div>
-    )
+  )
 }
