@@ -22,14 +22,14 @@ export default ApplicationList(){
 fetchApplications()
     },[])
 
-    if (loading) return <p className="p-4">Loading...</p>
-    if (error) return <p className="p-4 text-red-500">{error}</p>
+    if (loading) return <p className = "p-4">Loading...</p>
+    if (error) return <p className = "p-4 text-red-500">{error}</p>
 
     return(
         <div className = "grid gap-4 p-4">
         {applications.length > 0 ? ( applications.map(app =>(<ApplicationCard key={app._id} application= {app}/>
 
-        ))):(<p className="text-gray-600">No application found.</p>
+        ))):(<p className = "text-gray-600">No application found.</p>
 
         )}
         </div>
