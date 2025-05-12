@@ -13,8 +13,9 @@ export default function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+  
     try {
-      const res = await api.post('/auth/login', formData);
+      const res = await api.post('/auth/login', formData); // ✅ Just use formData
       onLogin(res.data.token);
       navigate('/');
     } catch (err) {

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import ApplicationList from './components/ApplicationList';
-import Login from './components/Login';
-import Register from './components/Register';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import RoutesComponent from './Routes';  // Ensure this import is correct
 import api from './services/api';
 
 export default function App() {
@@ -34,38 +32,8 @@ export default function App() {
     <Router>
       <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       <div className="max-w-4xl mx-auto p-4">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              isAuthenticated ? (
-                <ApplicationList />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/" replace />
-              ) : (
-                <Login onLogin={handleLogin} />
-              )
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/" replace />
-              ) : (
-                <Register onRegister={handleLogin} />
-              )
-            }
-          />
-        </Routes>
+        {/* Pass isAuthenticated prop to RoutesComponent */}
+        <RoutesComponent isAuthenticated={isAuthenticated} handleLogin={handleLogin} />
       </div>
     </Router>
   );

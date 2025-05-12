@@ -1,36 +1,33 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function Navbar({ isAuthenticated, onLogout }) {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    onLogout();
-    navigate('/login');
-  };
-
   return (
-    <nav className="bg-gray-800 text-white p-4 flex justify-between">
-      <div className="font-bold text-xl">
-        <Link to="/">Job Tracker</Link>
-      </div>
-      <div className="space-x-4">
-        {isAuthenticated ? (
+    <nav className="p-4 bg-blue-600 text-white">
+      <ul className="flex space-x-4">
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        {isAuthenticated && (
           <>
-            <button onClick={handleLogout} className="hover:underline">
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="hover:underline">
-              Login
-            </Link>
-            <Link to="/register" className="hover:underline">
-              Register
-            </Link>
+            <li>
+              <Link to="/add-application">Add Application</Link>
+            </li>
+            <li>
+              <button onClick={onLogout}>Logout</button>
+            </li>
           </>
         )}
-      </div>
+        {!isAuthenticated && (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+          </>
+        )}
+      </ul>
     </nav>
   );
 }

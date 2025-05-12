@@ -14,7 +14,7 @@ export default function Register({ onRegister }) {
     e.preventDefault();
     setError('');
     try {
-      const res = await api.post('/auth/register', formData);
+      const res = await api.post('/auth/register', formData); // ✅ use state directly
       onRegister(res.data.token);
       navigate('/');
     } catch (err) {
