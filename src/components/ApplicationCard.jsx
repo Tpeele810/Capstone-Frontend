@@ -2,46 +2,64 @@ import api from '../services/api';
 import {useState} from 'react'
 
 export default function ApplicationCard({ application, onDelete, onUpdate }) {
+    
+  //Setup State
     const [isEditing, setIsEditing] = useState(false)
     const [formData, setFormData] = useState({...application})
     const [error, setError] = useState(null)
   
-    const handleChange = (e) =>{
-        setFormData(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }))
-    }
+    // This function updates the form state as the user types into the input fields
+const handleChange = (e) => {
+  setFormData(prev => ({
+    ...prev, // keep all existing form fields unchanged
+    [e.target.name]: e.target.value, // update the field that changed (using the input's "name" attribute)
+  }));
+}
 
-    const handleSave = async () => {
-        setError(null)
-        try{
-            const res = await api.put(`/applications/${application._id}`, formData)
-            setIsEditing(false)
-            if(onUpdate) onUpdate(res.data)
-        }catch (err){
-    console.log('Failed to update application', err)}
-    }
+// This function is triggered when the user saves their edits to an application
+const handleSave = async () => {
+  setError(null); // clear any existing error messages
+  try {
+    // Send a PUT request to update the application on the backend
+    const res = await api.put(`/applications/${application._id}`, formData);
+    
+    // Exit edit mode after successful save
+    setIsEditing(false);
+    
+    // If an update callback exists (passed in from the parent), call it with the updated data
+    if (onUpdate) onUpdate(res.data);
+  } catch (err) {
+    // Log the error if something goes wrong
+    console.log('Failed to update application', err);
+  }
+}
 
-    const handleCancel = () => {
-        setFormData({ ...application });
-        setIsEditing(false);
-        setError(null);
-      };
+// This function resets the form back to the original application data and exits edit mode
+const handleCancel = () => {
+  setFormData({ ...application }); // reset formData to original application data
+  setIsEditing(false);             // exit edit mode
+  setError(null);                  // clear any existing errors
+}
 
+// This function deletes the current application after confirming with the user
+const handleDelete = async () => {
+  // Show a confirmation dialog before deleting
+  const confirmDelete = window.confirm(`Delete ${application.position} at ${application.company}?`);
+  if (!confirmDelete) return; // exit if user cancels
 
-    const handleDelete = async () => {
-    const confirmDelete = window.confirm(`Delete ${application.position} at ${application.company}?`);
-    if (!confirmDelete) return;
+  try {
+    // Send a DELETE request to remove the application
+    await api.delete(`/applications/${application._id}`);
+    
+    // If a delete callback exists (from the parent), call it with the deleted ID
+    if (onDelete) onDelete(application._id);
+  } catch (err) {
+    // Show error if the delete fails
+    console.error('Error deleting application:', err);
+    alert('Failed to delete. Try again.');
+  }
+};
 
-    try {
-      await api.delete(`/applications/${application._id}`);
-      if (onDelete) onDelete(application._id);
-    } catch (err) {
-      console.error('Error deleting application:', err);
-      alert('Failed to delete. Try again.');
-    }
-  };
 
   return (
     <div className = "border p-4 rounded shadow bg-white space-y-2">

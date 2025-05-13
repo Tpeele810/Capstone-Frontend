@@ -3,8 +3,11 @@ import ApplicationForm from './ApplicationForm';
 import api from '../services/api';
 
 export default function AddApplication() {
-  const navigate = useNavigate();
-
+  
+    //invoke useNavigate
+    const navigate = useNavigate();
+ 
+    //handle Add Application 
   const handleAddApplication = async (formData) => {
     try {
       const res = await api.post('/applications', formData);
