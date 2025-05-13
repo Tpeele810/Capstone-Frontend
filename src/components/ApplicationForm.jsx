@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-export default function ApplicationForm({ onSubmit, initialData = {} }) {
+export default function ApplicationForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     company: '',
     position: '',
@@ -11,21 +11,8 @@ export default function ApplicationForm({ onSubmit, initialData = {} }) {
 
   const [error, setError] = useState(null);
 
-  // Only run this effect if initialData has content (for editing)
-  useEffect(() => {
-    if (Object.keys(initialData).length > 0) {
-      setFormData({
-        company: initialData.company || '',
-        position: initialData.position || '',
-        status: initialData.status || 'Applied',
-        jobLink: initialData.jobLink || '',
-        notes: initialData.notes || '',
-      });
-    }
-  }, [initialData]);
-
   const handleChange = (e) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -41,9 +28,9 @@ export default function ApplicationForm({ onSubmit, initialData = {} }) {
     }
 
     try {
-      if (onSubmit) {
-        await onSubmit(formData);
-      }
+      await onSubmit(formData);
+
+      // Clear form after successful submission
       setFormData({
         company: '',
         position: '',
@@ -52,16 +39,14 @@ export default function ApplicationForm({ onSubmit, initialData = {} }) {
         notes: '',
       });
     } catch (err) {
-      console.error('Failed to create application:', err);
+      console.error('Failed to create application', err);
       setError('Failed to submit. Try again.');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded shadow max-w-md">
-      <h2 className="text-xl font-bold">
-        {initialData?.id ? 'Edit' : 'Add New'} Job Application
-      </h2>
+      <h2 className="text-xl font-bold">Add New Job Application</h2>
 
       {error && <p className="text-red-500">{error}</p>}
 
@@ -109,7 +94,7 @@ export default function ApplicationForm({ onSubmit, initialData = {} }) {
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
-        {initialData?.id ? 'Update' : 'Submit'}
+        Submit
       </button>
     </form>
   );

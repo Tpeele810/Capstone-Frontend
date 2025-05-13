@@ -5,16 +5,26 @@ import Register from './components/Register';
 import AddApplication from './components/AddApplication';
 import ApplicationForm from './components/ApplicationForm';
 
-const RoutesComponent = ({ isAuthenticated, handleLogin }) => {
+const RoutesComponent = ({ isAuthenticated, handleLogin, handleAddApplication, applications, refreshApplications }) => {
   return (
     <Routes>
       <Route
-        path="/"
-        element={isAuthenticated ? <ApplicationList /> : <Navigate to="/login" replace />}
-      />
-       <Route 
-       path="/login"
-        element={isAuthenticated ? (<Navigate to="/" replace />) : ( <Login onLogin={handleLogin} /> )
+  path="/"
+  element={
+    <ApplicationList
+      applications={applications}
+      refreshApplications={refreshApplications}
+    />
+  }
+/>
+      <Route
+        path="/login"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/" replace />
+          ) : (
+            <Login onLogin={handleLogin} />
+          )
         }
       />
       <Route
@@ -22,9 +32,9 @@ const RoutesComponent = ({ isAuthenticated, handleLogin }) => {
         element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
       />
       <Route
-        path="/add-application"
-        element={isAuthenticated ? <ApplicationForm /> : <Navigate to="/login" replace />}
-      />
+  path="/add-application"
+  element={<ApplicationForm onSubmit={handleAddApplication} />}
+/>
     </Routes>
   );
 };

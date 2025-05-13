@@ -1,100 +1,58 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import ApplicationCard from './ApplicationCard';
 
-export default function ApplicationList() {
-  const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+export default function ApplicationList({ applications, refreshApplications }) {
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortField, setSortField] = useState('createdAt');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const response = await api.get('/applications');
-        setApplications(response.data);
-      } catch (err) {
-        console.log('Error fetching applications', err);
-        setError('Failed to load applications.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchApplications();
-  }, []);
-
-  const handleDelete = (id) => {
-    setApplications(apps => apps.filter(app => app._id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/applications/${id}`);
+      refreshApplications();
+    } catch (err) {
+      console.error('Delete failed', err);
+      setError('Failed to delete application');
+    }
   };
 
-  const handleUpdate = (updatedApp) => {
-    setApplications(apps =>
-      apps.map(app => (app._id === updatedApp._id ? updatedApp : app))
-    );
+  const handleUpdate = async (updatedApp) => {
+    try {
+      await api.put(`/applications/${updatedApp._id}`, updatedApp);
+      refreshApplications();
+    } catch (err) {
+      console.error('Update failed', err);
+      setError('Failed to update application');
+    }
   };
 
-  const filteredApps = applications
+  const filteredApps = (applications || [])
     .filter(app => statusFilter === 'All' || app.status === statusFilter)
     .sort((a, b) => {
       const aField = a[sortField]?.toLowerCase?.() ?? a[sortField];
       const bField = b[sortField]?.toLowerCase?.() ?? b[sortField];
-
       if (aField < bField) return sortDirection === 'asc' ? -1 : 1;
       if (aField > bField) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
 
-  if (loading) return <p className="p-4">Loading...</p>;
-  if (error) return <p className="p-4 text-red-500">{error}</p>;
-
   return (
     <div className="p-4 space-y-6">
-      {/* Add New Application Button */}
       <Link to="/add-application">
         <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
           Add New Application
         </button>
       </Link>
 
-      {/* 🔽 Filter + Sort Controls */}
+      {error && <p className="text-red-500">{error}</p>}
+
       <div className="flex flex-wrap items-center gap-4">
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="All">All Statuses</option>
-          <option value="Applied">Applied</option>
-          <option value="Interviewing">Interviewing</option>
-          <option value="Offer">Offer</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-
-        <select
-          value={sortField}
-          onChange={(e) => setSortField(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="createdAt">Sort by Date</option>
-          <option value="company">Sort by Company</option>
-          <option value="position">Sort by Position</option>
-        </select>
-
-        <select
-          value={sortDirection}
-          onChange={(e) => setSortDirection(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
-        </select>
+        {/* Filters and sorting UI */}
       </div>
 
-      {/* Application Cards */}
       <div className="grid gap-4">
         {filteredApps.length > 0 ? (
           filteredApps.map(app => (
