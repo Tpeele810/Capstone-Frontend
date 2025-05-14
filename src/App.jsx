@@ -78,9 +78,9 @@ useEffect(() => {
         <RoutesComponent
           isAuthenticated = {isAuthenticated}
           handleLogin = {handleLogin}
-          handleAddApplication = {handleAddApplication}
-          applications = {applications}          
-          refreshApplications = {fetchApplications}
+          //handleAddApplication = {handleAddApplication}
+          //applications = {applications}          
+          //refreshApplications = {fetchApplications}
         />
       </div>
     </>
