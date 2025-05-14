@@ -16,6 +16,16 @@ export default function AddApplication() {
       console.log('Error adding application:', err);
     }
   };
+  // //handle Application 
+  // const handleAddApplication = async (formData) => {
+  //   try {
+  //     await api.post('/applications', formData);
+  //     await fetchApplications();
+  //     navigate('/'); // Safe now
+  //   } catch (err) {
+  //     console.error('Failed to add application:', err);
+  //   }
+  // };
 
   return (
     <div className="p-4">

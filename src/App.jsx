@@ -58,16 +58,16 @@ useEffect(() => {
     setToken('');
   };
 
-  //handle Application 
-  const handleAddApplication = async (formData) => {
-    try {
-      await api.post('/applications', formData);
-      await fetchApplications();
-      navigate('/'); // Safe now
-    } catch (err) {
-      console.error('Failed to add application:', err);
-    }
-  };
+  // //handle Application 
+  // const handleAddApplication = async (formData) => {
+  //   try {
+  //     await api.post('/applications', formData);
+  //     await fetchApplications();
+  //     navigate('/'); // Safe now
+  //   } catch (err) {
+  //     console.error('Failed to add application:', err);
+  //   }
+  // };
 
   return (
     <>
