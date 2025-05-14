@@ -15,11 +15,11 @@ const RoutesComponent = ({ isAuthenticated, handleLogin, handleAddApplication, a
       />
       <Route
         path = "/login"
-        element = {isAuthenticated ? (<Navigate to = "/" replace /> ) : ( <Login onLogin = {handleLogin} />)}
+        element = {isAuthenticated ? (<Navigate to = "/" replace /> ) : ( <Login onLogin = {handleLogin}/>)}
       />
       <Route
         path = "/register"
-        element = {isAuthenticated ? <Navigate to = "/" replace /> : <Register />}
+        element = {isAuthenticated ? <Navigate to = "/" replace /> : <Register onRegister = {handleLogin}/>}
       />
       <Route
         path = "/add-application"

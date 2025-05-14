@@ -13,12 +13,19 @@ export default function Register({ onRegister }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
     try {
       const res = await api.post('/auth/register', formData); // ✅ use state directly
+      console.log('Registration success', res.data)
       onRegister(res.data.token);
       navigate('/');
     } catch (err) {
-      setError('Username already exists or input is invalid.');
+      console.log('Registration error:', err)
+      if (err.responose  && err.response.data && err.response.data.error){
+        setError(err.response.data.error)}
+        else{
+          setError('An unexpected error occurred')
+        };
     }
   };
 
